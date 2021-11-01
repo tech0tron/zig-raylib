@@ -1,0 +1,1 @@
+7613 1125899908713200 1631000298000000000 6ec2150744adf80eba84b0d57b9f9773 C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\shell32.def
