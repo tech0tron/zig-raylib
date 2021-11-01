@@ -13,13 +13,14 @@ pub fn build(b: *std.build.Builder) void {
 
     const exe = b.addExecutable("sigil-zig", "src/main.zig");
 
-    exe.addLibPath("libs/raylib.lib");
+    exe.addLibPath("libs/raylib/src");
     exe.addIncludeDir("libs/raylib/src");
+    exe.linkSystemLibrary("raylib");
+    exe.linkSystemLibrary("winmm");
+    exe.linkSystemLibrary("gdi32");
+    exe.linkSystemLibrary("opengl32");
+    exe.linkLibC();
     
-    exe.setTarget(target);
-    exe.setBuildMode(mode);
-    exe.install();
-
     const run_cmd = exe.run();
     run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
