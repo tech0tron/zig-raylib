@@ -1,1 +1,1 @@
-54586 1125899908713174 1631000298000000000 31ee54f6aea4d07cc45db68137c9ee4d C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\ntdll.def.in
+54586 844424930259896 1631000298000000000 31ee54f6aea4d07cc45db68137c9ee4d C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\ntdll.def.in

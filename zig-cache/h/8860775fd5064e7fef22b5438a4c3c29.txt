@@ -1,1 +1,1 @@
-17468 1125899908713215 1631000298000000000 fc9286ecef067531669625238bd0203c C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\user32.def.in
+17468 844424930259935 1631000298000000000 fc9286ecef067531669625238bd0203c C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\user32.def.in

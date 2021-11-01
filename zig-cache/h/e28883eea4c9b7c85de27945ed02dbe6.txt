@@ -1,4 +1,0 @@
-20 3377699722571183 1635733280553339500 eed8c9a0ef5204e194eab625c365855e C:\Users\micha\Desktop\sigil-zig\zig-cache\o\332d28e755774306d122b52268a04200\cimport.h
-112581 3377699722570273 1635725335000000000 becaaa8ccc1f47aa67eec23d7256044e C:\Users\micha\Desktop\sigil-zig\libs\raylib\src\raylib.h
-1115 1125899908465360 1631000298000000000 620b57e25e32deea4977f3dbc09537af C:\Users\micha\scoop\apps\ziglang\current\lib\include\stdarg.h
-897 1125899908465362 1631000298000000000 c83188b320eb79ac48fb189b79a9b86d C:\Users\micha\scoop\apps\ziglang\current\lib\include\stdbool.h

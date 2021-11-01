@@ -1,1 +1,1 @@
-26856 1125899908713159 1631000298000000000 d40d0d4fe99ddbce66700a64e8fa1e9a C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\msvcrt.def.in
+26856 844424930259888 1631000298000000000 d40d0d4fe99ddbce66700a64e8fa1e9a C:\Users\micha\scoop\apps\ziglang\current\lib\libc\mingw\lib-common\msvcrt.def.in
