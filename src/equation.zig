@@ -2,49 +2,70 @@ const std = @import("std");
 usingnamespace @import("c.zig");
 usingnamespace @import("utilities.zig");
 
+pub const CoordinatePair = struct {
+    x: f64,
+    y: f64,
+
+    pub fn init(x: f64, y: f64) CoordinatePair {
+        return CoordinatePair {
+            .x = x,
+            .y = y
+        };
+    }
+};
+
+const EquationInitialTermsSize = 4;
 pub const Equation = struct {
     const Self = @This();
 
-    terms: []f32,
+    terms: []f64,
+    allocator: *std.mem.Allocator,
 
-    pub fn new(allocator: *std.mem.Allocator, maxDegrees: usize) !Equation {
-        var terms_buffer: []f32 = try allocator.alloc(f32, maxDegrees);
-        std.mem.set(f32, terms_buffer, 0);
+    pub fn init(allocator: *std.mem.Allocator) !Equation {
+        var allocated = try allocator.alloc(f64, 4);
+        std.mem.set(f64, allocated, 0);
 
         return Equation {
-            .terms = terms_buffer
+            .terms = allocated,
+            .allocator = allocator
         };
     }
 
-    pub fn setTerm(self: *Self, degree: usize, term: f32) void {
-        self.terms[degree] = term;
+    pub fn deinit(self: *Self) void {
+        self.allocator.free(self.terms);
+    } 
+
+    const setTermError = error {
+        NegativeDegreeNotSupported
+    };
+    pub fn setTerm(self: *Self, degree: usize, coefficient: f64) !void {
+        if (degree < 0) {
+            return setTermError.NegativeDegreeNotSupported;
+        }
+
+        if (degree > self.terms.len - 1) {
+            const newAllocation = try self.allocator.alloc(f64, self.terms.len + EquationInitialTermsSize);
+            
+            std.mem.set(f64, newAllocation, 0);
+            std.mem.copy(f64, newAllocation, self.terms);
+            self.allocator.free(self.terms);
+            self.terms = newAllocation;
+        }
+
+        self.terms[degree] = coefficient;
     }
 
-    pub fn getAt(self: *Self, x: f32) Vector2 {
-        var y: f32 = 0;
-        for (self.terms) |term, degree| {
-            y += (term * std.math.pow(f32, x, @intToFloat(f32, degree)));
+    pub fn generatePoint(self: *Self, x: f64) CoordinatePair {
+        var y: f64 = 0;
+
+        for (self.terms) |*coefficient, degree| {
+            std.debug.print("coefficient = {d}, degree = {d}, ", .{coefficient.*, degree});
+            y += coefficient.* * std.math.pow(f64, x, @intToFloat(f64, degree));
+            std.debug.print(" y = {d}\n", .{y});
         }
 
-        if (x == 99) {
-            std.debug.print("In getAt: {}\n", .{vector(x,y)});
-        }
-        return vector(x, y);
-    }
+        std.debug.print("Final y = {d}\n", .{y});
 
-    pub fn getPoints(self: *Self, allocator: *std.mem.Allocator, xBegin: f32, xEnd: f32, xStep: f32) ![]Vector2 {
-        var pointsToReturn = try allocator.alloc(Vector2, @floatToInt(usize, (-xBegin + xEnd) / xStep));
-
-        var currentX = xBegin;
-        var i: usize = 0;
-        while (currentX < xEnd) : ({ i += 0; currentX += xStep;}) {
-            pointsToReturn[i] = self.getAt(currentX);
-            if (currentX == 99) {
-                std.debug.print("Inside the loop of getPoints: {}\n", .{pointsToReturn[i]});
-            }
-        }
-
-        std.debug.print("After all points have been done (getPoints): {}\n", .{pointsToReturn[99]});
-        return pointsToReturn;
+        return CoordinatePair.init(x, y);
     }
 };

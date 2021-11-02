@@ -13,33 +13,26 @@ pub fn main() anyerror!void {
     var allocator = &gpalloc.allocator;
     defer _ = gpalloc.deinit();
 
-    var squared: Equation = try Equation.new(allocator, 4);
-    squared.setTerm(0, -2);
-    squared.setTerm(0, 1);
+    var squared: Equation = try Equation.init(allocator);
+    defer squared.deinit();
 
-    const points = try squared.getPoints(allocator, 0, 100, 1);
-    defer allocator.free(points);
-    
-    std.debug.print("Just after getting points: {}\n", .{points[99]});
-    InitWindow(WIDTH, HEIGHT, "raylib - your first window");
-    defer CloseWindow();
+    try squared.setTerm(3, 2);
+    try squared.setTerm(1, -8);
+    _ = squared.generatePoint(3);
+    _ = squared.generatePoint(1);
+    _ = squared.generatePoint(2);
 
-    var done = false;
-    std.debug.print("Just outside the loop: {}\n", .{points[99]});
+    //InitWindow(WIDTH, HEIGHT, "raylib - your first window");
+    //defer CloseWindow();
 
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(WHITE);
+   // while (!WindowShouldClose()) {
+    //    BeginDrawing();
+    //    ClearBackground(WHITE);
      
         // Axes
-        DrawLineEx(vector(-WIDTH,0), vector(WIDTH, 0), 3, BLACK);
-        DrawLineEx(vector(0, HEIGHT), vector(0, -HEIGHT), 3, BLACK);
+     //   DrawLineEx(vector(-WIDTH,0), vector(WIDTH, 0), 3, BLACK);
+     //   DrawLineEx(vector(0, HEIGHT), vector(0, -HEIGHT), 3, BLACK);
 
-        if (!done) {
-            std.debug.print("In the loop: {}\n", .{points[99]});
-            done = true;
-        }
-
-        EndDrawing();       
-    }
+      //  EndDrawing();       
+    //}
 }
