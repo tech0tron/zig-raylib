@@ -11,7 +11,7 @@ pub fn build(b: *std.build.Builder) void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
-    const exe = b.addExecutable("sigil-zig", "src/main.zig");
+    const exe = b.addExecutable("raylib-zig", "src/main.zig");
 
     exe.addLibPath("libs/raylib/src");
     exe.addIncludeDir("libs/raylib/src");
@@ -21,6 +21,8 @@ pub fn build(b: *std.build.Builder) void {
     exe.linkSystemLibrary("opengl32");
     exe.linkLibC();
     
+    exe.install();
+
     const run_cmd = exe.run();
     run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
