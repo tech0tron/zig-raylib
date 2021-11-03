@@ -18,12 +18,12 @@ const EquationInitialTermsSize = 4;
 pub const Equation = struct {
     const Self = @This();
 
-    terms: []f64,
+    terms: []CoordinatePair,
     allocator: *std.mem.Allocator,
 
     pub fn init(allocator: *std.mem.Allocator) !Equation {
-        var allocated = try allocator.alloc(f64, 4);
-        std.mem.set(f64, allocated, 0);
+        var allocated = try allocator.alloc(CoordinatePair, 4);
+        std.mem.set(CoordinatePair, allocated, .{ .x = 0, .y = 0} );
 
         return Equation {
             .terms = allocated,
@@ -35,31 +35,28 @@ pub const Equation = struct {
         self.allocator.free(self.terms);
     } 
 
-    const setTermError = error {
-        NegativeDegreeNotSupported
-    };
-    pub fn setTerm(self: *Self, degree: usize, coefficient: f64) !void {
-        if (degree < 0) {
-            return setTermError.NegativeDegreeNotSupported;
+    pub fn setTerm(self: *Self, degree: f64, coefficient: f64) !void {
+        for (self.terms) |*term| {
+            if (term.x == degree) {
+                (term.*).y = coefficient;
+                return;
+            }
         }
+        
+        const newAllocation = try self.allocator.alloc(CoordinatePair, self.terms.len + 1);
+        std.mem.set(CoordinatePair, newAllocation, .{ .x = 0, .y = 0});
+        std.mem.copy(CoordinatePair, newAllocation, self.terms);
+        self.allocator.free(self.terms);
+        self.terms = newAllocation;
 
-        if (degree > self.terms.len - 1) {
-            const newAllocation = try self.allocator.alloc(f64, self.terms.len + EquationInitialTermsSize);
-            
-            std.mem.set(f64, newAllocation, 0);
-            std.mem.copy(f64, newAllocation, self.terms);
-            self.allocator.free(self.terms);
-            self.terms = newAllocation;
-        }
-
-        self.terms[degree] = coefficient;
+        self.terms[self.terms.len - 1] = CoordinatePair { .x = degree, .y = coefficient };
     }
 
     pub fn generatePoint(self: *Self, x: f64) CoordinatePair {
         var y: f64 = 0;
 
-        for (self.terms) |*coefficient, degree| {
-            y += coefficient.* * std.math.pow(f64, x, @intToFloat(f64, degree));
+        for (self.terms) |term| {
+            y += term.y * std.math.pow(f64, x, term.x);
         }
 
         std.debug.print("Point: ({d}, {d})\n", .{x, y});
