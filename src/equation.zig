@@ -74,4 +74,14 @@ pub const Equation = struct {
 
         return allocated;
     } 
+
+    pub fn derive(self: *Self, allocator: *std.mem.Allocator) Equation {
+        var equation = try self.init(allocator);
+
+        for (self.terms) |*coefficient, degree| {
+            try equation.setTerm(degree - 1, coefficient * degree);
+        }
+
+        return equation;
+    }
 };
